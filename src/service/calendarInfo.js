@@ -66,7 +66,7 @@ const calendarinfo = {
     },
     async writeScheduleAxios(schedulelist) {
 
-        // calendarlist= [
+        // schedulelist= [  category是寫死的 time task milestone
         //     {
         //       id: "1",
         //       calendarId: "1",

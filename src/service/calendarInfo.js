@@ -12,7 +12,7 @@ const calendarinfo = {
             });
         console.log(readApi);
 
-        return readApi
+        return readApi.data
 
     },
     async writeCalendarAxios(calendarlist) {
@@ -27,17 +27,17 @@ const calendarinfo = {
         // borderColor: '#9e5fff',
         // checked : true
         //   ]
-
+        const calendaritem = calendarlist[0]
         if (!calendarlist)
             return "empty";
         const writeApi = await axios
             .post("http://localhost:3000/file/writecalendarlist", [{
-                id: calendarlist.id,
-                name: calendarlist.name,
-                color: calendarlist.color,
-                bgColor: calendarlist.bgColor,
-                dragBgColor: calendarlist.dragBgColor,
-                borderColor: calendarlist.borderColor,
+                id: calendaritem.id,
+                name: calendaritem.name,
+                color: calendaritem.color,
+                bgColor: calendaritem.bgColor,
+                dragBgColor: calendaritem.dragBgColor,
+                borderColor: calendaritem.borderColor,
                 checked: true
             }, ])
             .then((response) => (this.info = response))
@@ -54,18 +54,18 @@ const calendarinfo = {
 
 
         const readApi = await axios
-            .get("http://localhost:3000/file/readschedulelist")
+            .get("http://localhost:3000/file/readschedule")
             .then((response) => (this.info = response))
             .catch(function(error) {
                 // 请求失败处理
                 console.log(error);
             });
         console.log(readApi);
-
-        return readApi
+        console.log(readApi.data);
+        return readApi.data
     },
     async writeScheduleAxios(schedulelist) {
-
+        console.log(schedulelist);
         // schedulelist= [  category是寫死的 time task milestone
         //     {
         //       id: "1",
@@ -80,15 +80,16 @@ const calendarinfo = {
 
         if (!schedulelist)
             return "empty";
+        const scheduleitem = schedulelist[0]
         const writeApi = await axios
-            .post("http://localhost:3000/file/writeschedulelist", [{
-                id: schedulelist.id,
-                calendarId: schedulelist.calendarId,
-                title: schedulelist.title,
-                dueDateClass: schedulelist.dueDateClass,
-                dragBgColor: schedulelist.dragBgColor,
-                start: schedulelist.start,
-                end: schedulelist.end
+            .post("http://localhost:3000/file/writeschedule", [{
+                id: scheduleitem.id,
+                calendarId: scheduleitem.calendarId,
+                title: scheduleitem.title,
+                dueDateClass: scheduleitem.dueDateClass,
+                category: scheduleitem.category,
+                start: scheduleitem.start,
+                end: scheduleitem.end
             }, ])
             .then((response) => (this.info = response))
             .catch(function(error) {

@@ -2,11 +2,9 @@
 <template>
   <div class="home">
     <div id="menu">
-  
       <v-row justify="center">
-        <v-dialog v-model="dialog" width="600px" >
-          <template v-slot:activator="{ props }"
-          >
+        <v-dialog v-model="dialog" width="600px">
+          <template v-slot:activator="{ props }">
             <v-btn color="primary" dark v-bind="props"> Open Dialog </v-btn>
           </template>
           <v-card id="dialogschedule">
@@ -16,16 +14,22 @@
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col cols="12" >
+                  <v-col cols="12">
                     <v-text>start</v-text>
 
-                    <Datepicker  v-model="startpickdate" teleport="#dialogschedule"/>
+                    <Datepicker
+                      v-model="startpickdate"
+                      teleport="#dialogschedule"
+                    />
                   </v-col>
 
-                  <v-col cols="12" >
+                  <v-col cols="12">
                     <v-text>end</v-text>
 
-                    <Datepicker v-model="endpickdate" teleport="#dialogschedule"/>
+                    <Datepicker
+                      v-model="endpickdate"
+                      teleport="#dialogschedule"
+                    />
                   </v-col>
                   <!-- <v-col cols="12">
                     <v-select :items="items" label="type" v-model="type" headline></v-select>
@@ -35,15 +39,18 @@
                   </v-col>
 
                   <v-col cols="12">
-                    <v-select :items="categoryitems" label="category" v-model="category" ></v-select>
-                    
+                    <v-select
+                      :items="categoryitems"
+                      label="category"
+                      v-model="category"
+                    ></v-select>
                   </v-col>
                 </v-row>
               </v-container>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="dialog=false">
+              <v-btn color="blue darken-1" text @click="dialog = false">
                 Close
               </v-btn>
               <v-btn color="blue darken-1" text @click="creatschedule">
@@ -55,8 +62,6 @@
       </v-row>
 
       <span id="menu-navi">
-     
-
         <div class="lnb-new-schedule">
           <button
             v-on:click="greet"
@@ -116,7 +121,7 @@ require("tui-calendar/dist/tui-calendar.css");
 require("tui-date-picker/dist/tui-date-picker.css");
 require("tui-time-picker/dist/tui-time-picker.css");
 const calendarinfo = require("../service/calendarInfo");
-
+const calendarbase = require("../service/calendarbase");
 export default defineComponent({
   name: "HomeView",
   return: {},
@@ -126,14 +131,14 @@ export default defineComponent({
       schedule: [],
       dialog: false,
       items: ["17", "29", "54"],
-      categoryitems:['time','task',"milestone"],
-      type:"",
-      name:"",
-      category:"time",
+      categoryitems: ["time", "task", "milestone"],
+      type: "",
+      name: "",
+      category: "time",
 
       startpickdate: new Date(),
       endpickdate: new Date(),
-      cal :{}
+      cal: {},
     };
   },
   components: {
@@ -141,57 +146,45 @@ export default defineComponent({
   },
   methods: {
     async calendarinit() {
-      const calendarlist1 = [{
-        id: String(1),
-        name: "My Calendar",
-        color: "#ffffff",
-        bgColor: "#9e5fff",
-        dragBgColor: "#9e5fff",
-        borderColor: "#9e5fff",
-        checked: true,
-      }];
-      this.cal=new Calendar("#calendar", {
+      //this.creatschedule(schedule)
+      this.calendarlist = await calendarbase.init();
+      this.cal = new Calendar("#calendar", {
         defaultView: "day", // daily view option
-        calendars:calendarlist1
-      })
-      this.cal.setCalendars(calendarlist1)
-      this.calendarlist = await calendarinfo.writeCalendarAxios(calendarlist1);
-      this.calendarlist = await calendarinfo.readCalendarAxios();
+      });
+      this.cal.setCalendars(this.calendarlist);
       console.log(this.calendarlist);
-      const start=new Date()
- 
+
+      const schedule = await calendarinfo.readScheduleAxios();
+      
      
-      // this.creatschedule(schedule)
-     
-     
+      this.cal.createSchedules(schedule);
+      this.cal.render();
       return 0;
     },
     async consoledata() {
       console.log(this.startpickdate);
       console.log(this.endpickdate);
     },
-    async creatschedule()
-    {
-      this.dialog=false;
-    const start=new Date()
-       const schedule=[{
+    async creatschedule() {
+      this.dialog = false;
+     
+      const schedule = [
+        {
           id: "1",
           calendarId: "1",
           title: String(this.title),
           category: String(this.category),
           dueDateClass: "",
-           start: this.startpickdate,
+          start: this.startpickdate,
           end: this.endpickdate,
-        }]
-        
-        console.log(new Date(new Date().setHours(start.getHours()-7)))
-        console.log(new Date(new Date().setHours(start.getHours())))
-        console.log(this.startpickdate)
-        console.log(this.endpickdate)
-      this.cal.createSchedules(schedule)
+        },
+      ];
+
+      this.cal.createSchedules(schedule);
+      console.log(schedule);
+      calendarinfo.writeScheduleAxios(schedule);
       this.cal.render();
 
-      
       //  this.cal.createSchedules([
       //   {
       //     id: "1",
@@ -204,9 +197,26 @@ export default defineComponent({
       //   },
       // ]);
       // this.cal.render();
-
-      console.log(schedule)
-    }
+    },
+    async writecalendar() {
+      //    const calendarlist1 = [{
+      //   id: String(1),
+      //   name: "My Calendar",
+      //   color: "#ffffff",
+      //   bgColor: "#9e5fff",
+      //   dragBgColor: "#9e5fff",
+      //   borderColor: "#9e5fff",
+      //   checked: true,
+      // }];
+      // this.cal=new Calendar("#calendar", {
+      //   defaultView: "day", // daily view option
+      // })
+      // // this.cal.setCalendars(calendarlist1)
+      // await calendarinfo.writeCalendarAxios(calendarlist1);
+      // const calendarlist = await calendarinfo.readCalendarAxios();
+      // this.cal.setCalendars(calendarlist)
+      // console.log(calendarlist);
+    },
   },
   created: function () {
     this.calendarinit();

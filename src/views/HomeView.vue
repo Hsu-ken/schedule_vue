@@ -5,7 +5,7 @@
       <v-row justify="center">
         <v-dialog v-model="dialog" width="600px">
           <template v-slot:activator="{ props }">
-            <v-btn color="primary" dark v-bind="props"> Open Dialog </v-btn>
+            <v-btn color="primary" dark v-bind="props"> Schedule </v-btn>
           </template>
           <v-card id="dialogschedule">
             <v-card-title>
@@ -40,9 +40,16 @@
 
                   <v-col cols="12">
                     <v-select
-                      :items="categoryitems"
+                      :items="categorylist"
                       label="category"
                       v-model="category"
+                    ></v-select>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-select
+                      :items="calendarnamelist"
+                      label="calendar"
+                      v-model="calendar"
                     ></v-select>
                   </v-col>
                 </v-row>
@@ -62,17 +69,7 @@
       </v-row>
 
       <span id="menu-navi">
-        <div class="lnb-new-schedule">
-          <button
-            v-on:click="greet"
-            id="btn-new-schedule1"
-            type="button"
-            class="btn btn-default btn-block lnb-new-schedule-btn"
-            data-toggle="modal"
-          >
-            New schedule
-          </button>
-        </div>
+        
 
         <button
           type="button"
@@ -131,10 +128,13 @@ export default defineComponent({
       schedule: [],
       dialog: false,
       items: ["17", "29", "54"],
-      categoryitems: ["time", "task", "milestone"],
+      categorylist: ["time", "task", "milestone"],
+      calendarnamelist:[],
+      calendarnametoid:{},
       type: "",
       name: "",
       category: "time",
+      calendar: "Work",
 
       startpickdate: new Date(),
       endpickdate: new Date(),
@@ -148,6 +148,12 @@ export default defineComponent({
     async calendarinit() {
       //this.creatschedule(schedule)
       this.calendarlist = await calendarbase.init();
+      for(let i=0;i<this.calendarlist.length;i++)
+      {
+        let itmename=this.calendarlist[i].name
+        this.calendarnamelist.push(itmename)
+        this.calendarnametoid[itmename]=i;
+      }
       this.cal = new Calendar("#calendar", {
         defaultView: "day", // daily view option
       });
@@ -159,6 +165,8 @@ export default defineComponent({
      
       this.cal.createSchedules(schedule);
       this.cal.render();
+
+
       return 0;
     },
     async consoledata() {
@@ -171,7 +179,7 @@ export default defineComponent({
       const schedule = [
         {
           id: "1",
-          calendarId: "1",
+          calendarId: String(this.calendarnametoid[this.calendar]),
           title: String(this.title),
           category: String(this.category),
           dueDateClass: "",
@@ -217,6 +225,7 @@ export default defineComponent({
       // this.cal.setCalendars(calendarlist)
       // console.log(calendarlist);
     },
+  
   },
   created: function () {
     this.calendarinit();

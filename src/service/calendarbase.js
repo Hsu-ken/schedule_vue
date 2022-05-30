@@ -51,27 +51,28 @@ const calendarbase = {
         var calendar;
         var id = 0;
 
-        calendar = this.CalendarInfo();
+        calendar = await this.CalendarInfo();
         id += 1;
         calendar.id = String(id);
-        calendar.name = 'work';
+        calendar.name = 'Daily';
+        calendar.color = '#ffffff';
+        calendar.bgColor = '#00a9ff';
+        calendar.dragBgColor = '#00a9ff';
+        calendar.borderColor = '#00a9ff';
+
+        this.addCalendar(CalendarList, calendar);
+
+        calendar = await this.CalendarInfo();
+        id += 1;
+        calendar.id = String(id);
+        calendar.name = 'Work';
         calendar.color = '#ffffff';
         calendar.bgColor = '#9e5fff';
         calendar.dragBgColor = '#9e5fff';
         calendar.borderColor = '#9e5fff';
         this.addCalendar(CalendarList, calendar);
 
-        calendar = this.CalendarInfo();
-        id += 1;
-        calendar.id = String(id);
-        calendar.name = 'Company';
-        calendar.color = '#ffffff';
-        calendar.bgColor = '#00a9ff';
-        calendar.dragBgColor = '#00a9ff';
-        calendar.borderColor = '#00a9ff';
-        this.addCalendar(CalendarList, calendar);
-
-        calendar = this.CalendarInfo();
+        calendar = await this.CalendarInfo();
         id += 1;
         calendar.id = String(id);
         calendar.name = 'Family';
@@ -81,7 +82,7 @@ const calendarbase = {
         calendar.borderColor = '#ff5583';
         this.addCalendar(CalendarList, calendar);
 
-        calendar = this.CalendarInfo();
+        calendar = await this.CalendarInfo();
         id += 1;
         calendar.id = String(id);
         calendar.name = 'Friend';
@@ -91,7 +92,18 @@ const calendarbase = {
         calendar.borderColor = '#03bd9e';
         this.addCalendar(CalendarList, calendar);
 
-        calendar = this.CalendarInfo();
+        calendar = await this.CalendarInfo();
+        id += 1;
+        calendar.id = String(id);
+        calendar.name = 'Company';
+        calendar.color = '#ffffff';
+        calendar.bgColor = '#9d9d9d';
+        calendar.dragBgColor = '#9d9d9d';
+        calendar.borderColor = '#9d9d9d';
+
+        this.addCalendar(CalendarList, calendar);
+
+        calendar = await this.CalendarInfo();
         id += 1;
         calendar.id = String(id);
         calendar.name = 'Travel';
@@ -99,16 +111,6 @@ const calendarbase = {
         calendar.bgColor = '#bbdc00';
         calendar.dragBgColor = '#bbdc00';
         calendar.borderColor = '#bbdc00';
-        this.addCalendar(CalendarList, calendar);
-
-        calendar = this.CalendarInfo();
-        id += 1;
-        calendar.id = String(id);
-        calendar.name = 'etc';
-        calendar.color = '#ffffff';
-        calendar.bgColor = '#9d9d9d';
-        calendar.dragBgColor = '#9d9d9d';
-        calendar.borderColor = '#9d9d9d';
         this.addCalendar(CalendarList, calendar);
 
         return CalendarList
